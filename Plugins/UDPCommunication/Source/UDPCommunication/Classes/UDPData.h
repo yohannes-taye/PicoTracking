@@ -35,37 +35,7 @@ struct FUDPData {
 	float float7 = 0.0f;
 	// UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "UDPCommunication")
 	int64 float8 = 0.0f; 
-	// int32 float8 = 0.0f;
-	// UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "UDPCommunication")
-	// 	float float9 = 0.0f;
-	// UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "UDPCommunication")
-	// 	float float10 = 0.0f;
-	// UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "UDPCommunication")
-	// 	float float11 = 0.0f;
-	// UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "UDPCommunication")
-	// 	float float12 = 0.0f;
-	// UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "UDPCommunication")
-	// 	float float13 = 0.0f;
-	// UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "UDPCommunication")
-	// 	float float14 = 0.0f;
-	// UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "UDPCommunication")
-	// 	float float15 = 0.0f;
-	// UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "UDPCommunication")
-	// 	float float16 = 0.0f;
-	// UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "UDPCommunication")
-	// 	float float17 = 0.0f;
-	// UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "UDPCommunication")
-	// 	float float18 = 0.0f;
-	// UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "UDPCommunication")
-	// 	float float19 = 0.0f;
-	// UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "UDPCommunication")
-	// 	float float20 = 0.0f;
-	// UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "UDPCommunication")
-	// 	uint8 uint1 = 0;
-	// UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "UDPCommunication")
-	// 	uint8 uint2 = 0;
-	// UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "UDPCommunication")
-	// 	uint8 uint3 = 0;
+ 
 	FUDPData() {
 	}
 };
@@ -88,12 +58,7 @@ FORCEINLINE FArchive& operator<<(FArchive &Ar, FUDPData &Structure)
 
 	FDateTime Time = FDateTime::Now();
 	Structure.float8=Time.ToUnixTimestamp();
-	// Structure.float1 = 0.0f;
-	// FString converted_text= FString::Printf(TEXT("%lld"), Structure.float8);
-	// GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, *converted_text);	
-	// Structure.float1 = ReverseFloat2(Structure.float1);
-	// Structure.float2 = ReverseFloat2(Structure.float2);
-	// Structure.float3 = ReverseFloat2(Structure.float3); 
+	
 	Ar << Structure.header1;
 	Ar << Structure.float8;
 	Ar << Structure.PacketSize; 
@@ -111,139 +76,5 @@ FORCEINLINE FArchive& operator<<(FArchive &Ar, FUDPData &Structure)
 	Ar << Structure.float6;
 	Ar << Structure.aa; 
 	Ar << Structure.float7;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	//
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-	// Ar << Structure.blank;
-
 	return Ar;
 }

@@ -76,6 +76,10 @@
 				"Win64",
 				"Android"
 			]
+		},
+		{
+			"Name": "MobileNativeCode",
+			"Enabled": true
 		}
 	]
 }
