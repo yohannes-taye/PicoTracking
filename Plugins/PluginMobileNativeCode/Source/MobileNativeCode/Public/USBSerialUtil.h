@@ -43,6 +43,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category="MobileNativeCode Category", DisplayName="USB Serial Send Byte")
 	bool SendByte(int a);
 
+	UFUNCTION(BlueprintCallable, Category="MobileNativeCode Category", DisplayName="USB Serial Send Tracking Data")
+	FString SendTrackingData(float tx, float ty, float tz, float rx, float ry, float rz, float rw);
+
 	
 };
 

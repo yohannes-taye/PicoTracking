@@ -161,7 +161,7 @@ public class AndroidOpenAccessBridge {
         if (parcelFileDescriptor != null) {
             final FileDescriptor fileDescriptor = parcelFileDescriptor.getFileDescriptor();
             this.mOutputStream = new FileOutputStream(fileDescriptor);
-            this.mInputStream = new FileInputStream(fileDescriptor);
+//             this.mInputStream = new FileInputStream(fileDescriptor);
             return "Success"; 
           
             
@@ -169,6 +169,35 @@ public class AndroidOpenAccessBridge {
             return "ERROR: ParcelFileDescriptor returned null"; 
         }
     }
+    
+  
+    @Keep
+    public byte[] prepareArray(float tx, float ty, float tz, float rx, float ry, float rz, float rw){
+        byte[] buffer = new byte[28];
+        float[] data = {tx, ty, tz, rx, ry, rz, rw}; 
+        int j =0;
+        for(int i = 0; i < 28; i += 4){
+            int intBits = Float.floatToIntBits(data[j]);
+            buffer[i + 0] = (byte) (intBits >> 24);
+            buffer[i + 1] = (byte) (intBits >> 16);
+            buffer[i + 2] = (byte) (intBits >> 8);
+            buffer[i + 3] = (byte) (intBits); 
+            j=j+1;
+        }
+        return buffer;
+    }
+    @Keep 
+    public String sendTrackingData(float tx, float ty, float tz, float rx, float ry, float rz, float rw){
+        try{
+            byte[] buffer = prepareArray( tx, ty, tz, rx, ry, rz, rw);
+            mOutputStream.write(buffer);
+        }catch (IOException e){
+            return e.getMessage(); 
+                // return "ERROR: While attempting to write to stream"; 
+        }
+        return "Success";
+//         return true;  
+}
     
     @Keep
     public boolean sendByte(int a){

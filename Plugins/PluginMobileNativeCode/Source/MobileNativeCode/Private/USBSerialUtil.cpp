@@ -87,6 +87,7 @@ FString AUSBSerialUtil::AttachAccessory()
 	return Result; 
 }
 
+
 bool AUSBSerialUtil::SendByte(int a)
 {
 	bool success = false;
@@ -100,5 +101,26 @@ bool AUSBSerialUtil::SendByte(int a)
 #endif
 	return success;
 	
+}
+
+FString AUSBSerialUtil::SendTrackingData(float tx, float ty, float tz, float rx, float ry, float rz, float rw)
+{
+	bool success = false;
+	FString Result = TEXT("Failed"); 
+#if PLATFORM_ANDROID
+	Result = AndroidUtils::CallJavaCode<FString>(
+		  AndroidOpenAccessBridge,
+		  "sendTrackingData",
+		  "",
+		  tx,
+		  ty,
+		  tz,
+		  rx,
+		  ry,
+		  rz,
+		  rw
+	);
+#endif
+	return Result;
 }
 
