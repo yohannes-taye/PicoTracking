@@ -28,7 +28,11 @@ void UWebSocketGameInstance::Shutdown()
 	}
 	Super::Shutdown();
 
+	
+	
+    
 }
+
 
 void  UWebSocketGameInstance::SendMessage(FString message)
 {

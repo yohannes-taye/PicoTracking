@@ -157,7 +157,7 @@ public class AndroidOpenAccessBridge {
         }else{
             return "ERROR: getAccessory returned null"; 
         }
-
+        
         if (parcelFileDescriptor != null) {
             final FileDescriptor fileDescriptor = parcelFileDescriptor.getFileDescriptor();
             this.mOutputStream = new FileOutputStream(fileDescriptor);
