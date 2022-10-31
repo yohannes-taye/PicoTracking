@@ -10,7 +10,8 @@ import time
 import threading
 import os
 import socket
-import debugpy 
+import debugpy
+import socket 
 from attribs import *
 
 
@@ -31,10 +32,13 @@ ACCESSORY_PID = (0x00b2,)
 NETLINK_KOBJECT_UEVENT = 15
 '''
 
+'''Download an image from an
+ http address and save it to a global variable '''
+
 def main():
-    debugpy.listen(5678)
-    print("Press play!")
-    debugpy.wait_for_client()
+    # debugpy.listen(5678)
+    # print("Press play!")
+    # debugpy.wait_for_client()
     while True:
         # print("starting accessory task")
         try:
@@ -45,8 +49,23 @@ def main():
             print(f"LALI_DEBUG: No compatible device found")
         # print("accessory task finished")
  
+def setup_local_udp_connection():
+    global UDPClientSocket
+    global serverAddressPort
+
+    msgFromClient       = "Hello UDP Server"
+    bytesToSend         = str.encode(msgFromClient)
+    serverAddressPort   = ("127.0.0.1", 20001)
+    bufferSize          = 1024
+    # Create a UDP socket at client side
+
+    UDPClientSocket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM) 
+
 def accessory_task():
+    global UDPClientSocket
+    global serverAddressPort
     dev = usb.core.find(idVendor=NACCESSORY_VID);
+    setup_local_udp_connection()
     if dev is None:
         dev = usb.core.find(idVendor=ACCESSORY_VID);
         if dev is None: 
@@ -113,21 +132,67 @@ def accessory_task():
     length = -1
     while True:
         try:
-            data = ep_in.read(size_or_buffer = 5, timeout = 1000)
-            print("read value %d" % data[0])
-            print("read value %d" % data[1])
-            print("read value %d" % data[2])
-            print("read value %d" % data[3])
-            print("read value %d" % data[4])
-        except usb.core.USBError:
-            print("failed to send IN transfer")
-            # break
+            data = ep_in.read(size_or_buffer = 28, timeout = 1000)
+            data = bytearray(data)
+            UDPClientSocket.sendto(data , serverAddressPort)
+
+            # tx = struct.unpack('>f', data[0:4])
+            # ty = struct.unpack('>f', data[4:8])
+            #dev tz = struct.unpack('>f', data[8:12])
+
+            # rx = struct.unpack('>f', data[12:16])
+            # ry = struct.unpack('>f', data[16:20])
+            # rz = struct.unpack('>f', data[20:24])
+            # rw = struct.unpack('>f', data[24:28])
+
+            # print(f"position x: {tx}")
+            # print(f"position y: {ty}")
+            # print(f"position z: {tz}")
+            # print(f"rotation x: {rx}")
+            # print(f"rotation y: {ry}")
+            # print(f"rotation z: {rz}")
+            # print(f"rotation w: {rw}")
+
+            # struct.unpack('>f', data)
+            # struct.unpack('>f', data)
+            # struct.unpack('>f', data)
+
+            print(type(data))
+            print(data)
+
+
+            # print("read value %d" % data[0])
+            # print("read value %d" % data[1])
+            # print("read value %d" % data[2])
+            # print("read value %d" % data[3])
+            # print("read value %d" % data[4])
+        except usb.core.USBError as e:
+            # print("failed to send IN transfer")
+            if str(e) == "[Errno 19] No such device (it may have been disconnected)": 
+                print(1)
+
+            elif str(e) == "[Errno 110] Operation timed out": 
+                print(2)
+            else: 
+                print(3)
+
+            # print(str(e))
+            # print(str(e.backend_error_code))
+
+            dev = usb.core.find(idVendor=NACCESSORY_VID);
+            if dev is None:
+                # print("LALI_DEBUG: Was not in host mode")
+                dev = usb.core.find(idVendor=ACCESSORY_VID);
+                if dev is None: 
+                    pass 
+                    # print("LALI_DEBUG: Cant also find in accessory mode ")
+                # break
         except Exception as e:
-            pass 
-            # logging.error(traceback.format_exc())
+            print(4) 
+                # logging.error(traceback.format_exc())
  
     # writer_thread.join()
-    print("exiting application")
+    # print("exiting application")
  
 def writer (ep_out):
     while True:
