@@ -9,6 +9,16 @@ AUSBSerialUtil::AUSBSerialUtil()
 	PrimaryActorTick.bCanEverTick = true;
 }
 
+void AUSBSerialUtil::StaticFunctDispatch(const FString& ReturnValue)
+{
+	AsyncTask(ENamedThreads::GameThread, [=]()
+	{
+		StaticValueDispatch.ExecuteIfBound(ReturnValue);
+		//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, ReturnValue);
+		//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("StaticFunctDispatch"));
+	});
+}
+
 // Called when the game starts or when spawned
 void AUSBSerialUtil::BeginPlay()
 {
@@ -65,9 +75,12 @@ FString AUSBSerialUtil::testLocalFunction()
 #endif
 	return Result; 
 }
+FTypeDispacth AUSBSerialUtil::StaticValueDispatch;
 
-FString AUSBSerialUtil::AttachAccessory()
+FString AUSBSerialUtil::AttachAccessory(const FTypeDispacth& CallBackPlatform)
 {
+	StaticValueDispatch = CallBackPlatform;
+	
 	FString Result = TEXT(""); 
 #if PLATFORM_ANDROID
 	AndroidOpenAccessBridge = AndroidUtils::CallJavaCode<jobject>(
@@ -77,7 +90,7 @@ FString AUSBSerialUtil::AttachAccessory()
 	  true
 	);
 	
-	Result  = AndroidUtils::CallJavaCode<FString>(
+	AndroidUtils::CallJavaCode<void>(
 		  AndroidOpenAccessBridge,
 		  "attachAccessory",
 		  ""
@@ -123,4 +136,14 @@ FString AUSBSerialUtil::SendTrackingData(float tx, float ty, float tz, float rx,
 #endif
 	return Result;
 }
+
+//-- Functions CallBack for Java code
+#if PLATFORM_ANDROID
+JNI_METHOD void Java_com_Plugins_MobileNativeCode_AndroidOpenAccessBridge_CallBackCppAndroid(JNIEnv* env, jclass clazz, jstring returnStr)
+{
+	FString result = JavaConvert::FromJavaFString(returnStr);
+	// UMobileNativeCodeBlueprint::StaticFunctDispatch(result);// Call Dispatcher
+	AUSBSerialUtil::StaticFunctDispatch(result);
+}
+#endif //PLATFORM_ANDROID
 

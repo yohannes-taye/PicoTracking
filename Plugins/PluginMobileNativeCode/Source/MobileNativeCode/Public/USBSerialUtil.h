@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "MobileNativeCodeBlueprint.h"
 #include "GameFramework/Actor.h"
 #if PLATFORM_ANDROID
 #include "Android/Utils/AndroidUtils.h"
@@ -19,6 +20,9 @@ class MOBILENATIVECODE_API AUSBSerialUtil : public AActor
 public:
 	// Sets default values for this actor's properties
 	AUSBSerialUtil();
+	static FTypeDispacth StaticValueDispatch;
+	static void StaticFunctDispatch(const FString& ReturnValue);
+
 private:
 #if PLATFORM_ANDROID
 	jobject AndroidOpenAccessBridge;
@@ -38,7 +42,7 @@ public:
 	static FString testLocalFunction();
 
 	UFUNCTION(BlueprintCallable, Category = "MobileNativeCode Category",DisplayName="USB Serial Attach Accessory")
-	FString AttachAccessory();
+	FString AttachAccessory(const FTypeDispacth& CallBackPlatform);
 
 	UFUNCTION(BlueprintCallable, Category="MobileNativeCode Category", DisplayName="USB Serial Send Byte")
 	bool SendByte(int a);

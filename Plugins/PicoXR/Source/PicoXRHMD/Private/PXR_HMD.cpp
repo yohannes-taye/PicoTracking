@@ -127,7 +127,7 @@ bool FPicoXRHMD::GetCurrentPose(int32 DeviceId, FQuat& CurrentOrientation, FVect
 	{
 		CurrentFrame = NextGameFrameToRender.Get();
 	}
-	else
+	else 
 	{
 		return false;
 	}

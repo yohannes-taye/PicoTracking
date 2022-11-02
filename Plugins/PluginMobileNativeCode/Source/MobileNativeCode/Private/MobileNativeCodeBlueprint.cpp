@@ -162,7 +162,8 @@ void UMobileNativeCodeBlueprint::asyncHelloWorld(const FTypeDispacth& CallBackPl
     "asyncHelloWorldOnAndroid",
     "",
     true,
-    MyStr
+    MyStr,
+    5000
   );
 
 #endif //Android

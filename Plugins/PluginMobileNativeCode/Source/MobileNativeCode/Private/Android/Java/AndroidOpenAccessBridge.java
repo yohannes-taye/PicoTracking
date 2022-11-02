@@ -26,6 +26,14 @@ public class AndroidOpenAccessBridge {
     @Keep
     FileInputStream mInputStream;
 
+    @Keep
+    boolean attempting_to_attach = false;
+    
+    //Calling *.cpp code
+    @Keep
+    public static native void CallBackCppAndroid(String returnStr);
+    
+    
     AndroidOpenAccessBridge(){
         this.context = null; 
     }
@@ -142,35 +150,58 @@ public class AndroidOpenAccessBridge {
             return "ERROR: ParcelFileDescriptor returned null"; 
         }
     }
-    //TODO: change the return value to be an array of ints to 
+    //TODO: change the return value to be void 
     // indicate the multiple possible faliure points. 
     @Keep
-    public String attachAccessory() {
-        if(this.context == null){
-            return "ERROR: Context is null"; 
+    public void attachAccessory() {
+      //create a new Thread 
+        if(attempting_to_attach){
+            return; 
         }
-        UsbAccessory accessory = getAccessory_new(); 
-        UsbManager mUsbManager = (UsbManager) this.context.getSystemService(Context.USB_SERVICE);
-        final ParcelFileDescriptor parcelFileDescriptor;
-        if(accessory != null){
-            parcelFileDescriptor = mUsbManager.openAccessory(accessory);
-        }else{
-            return "ERROR: getAccessory returned null"; 
+        else{
+            attempting_to_attach = true; 
+            Thread thread = new Thread(new Runnable(){
+                @Override
+                public void run() {
+                    if(AndroidOpenAccessBridge.this.context == null){
+                        AndroidOpenAccessBridge.this.attempting_to_attach = false;
+                        CallBackCppAndroid("ERROR: Context is null");
+            //             return "ERROR: Context is null"; 
+                        return; 
+                    }
+                    UsbAccessory accessory = getAccessory_new(); 
+                    UsbManager mUsbManager = (UsbManager) AndroidOpenAccessBridge.this.context.getSystemService(Context.USB_SERVICE);
+                    final ParcelFileDescriptor parcelFileDescriptor;
+                    if(accessory != null){
+                        parcelFileDescriptor = mUsbManager.openAccessory(accessory);
+                    }else{
+                        AndroidOpenAccessBridge.this.attempting_to_attach = false;
+                        CallBackCppAndroid("ERROR: getAccessory returned null");
+                        return;
+            //             return "ERROR: getAccessory returned null"; 
+                    }
+                    if (parcelFileDescriptor != null) {
+                        final FileDescriptor fileDescriptor = parcelFileDescriptor.getFileDescriptor();
+                        AndroidOpenAccessBridge.this.mOutputStream = new FileOutputStream(fileDescriptor);
+                //             this.mInputStream = new FileInputStream(fileDescriptor);
+                        AndroidOpenAccessBridge.this.attempting_to_attach = false;
+                        CallBackCppAndroid("SUCCESS: Accessory attached");
+                        return; 
+            //             return "Success"; 
+                    }else{
+                        AndroidOpenAccessBridge.this.attempting_to_attach = false;
+                        CallBackCppAndroid("ERROR: ParcelFileDescriptor returned null");
+                        return; 
+            //             return "ERROR: ParcelFileDescriptor returned null"; 
+                    }               
+                }
+            });
+            thread.start();            
         }
         
-        if (parcelFileDescriptor != null) {
-            final FileDescriptor fileDescriptor = parcelFileDescriptor.getFileDescriptor();
-            this.mOutputStream = new FileOutputStream(fileDescriptor);
-//             this.mInputStream = new FileInputStream(fileDescriptor);
-            return "Success"; 
-          
-            
-        }else{
-            return "ERROR: ParcelFileDescriptor returned null"; 
-        }
+        
     }
     
-  
     @Keep
     public byte[] prepareArray(float tx, float ty, float tz, float rx, float ry, float rz, float rw){
         byte[] buffer = new byte[28];
