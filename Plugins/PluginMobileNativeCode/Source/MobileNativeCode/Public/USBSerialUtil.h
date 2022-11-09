@@ -20,8 +20,14 @@ class MOBILENATIVECODE_API AUSBSerialUtil : public AActor
 public:
 	// Sets default values for this actor's properties
 	AUSBSerialUtil();
+	
 	static FTypeDispacth StaticValueDispatch;
 	static void StaticFunctDispatch(const FString& ReturnValue);
+
+	static FTypeDispacth StaticValueDispatch_SendArray;
+	static void StaticFunctDispatch_SendArray(const FString& ReturnValue);
+
+
 
 private:
 #if PLATFORM_ANDROID
@@ -48,7 +54,7 @@ public:
 	bool SendByte(int a);
 
 	UFUNCTION(BlueprintCallable, Category="MobileNativeCode Category", DisplayName="USB Serial Send Tracking Data")
-	FString SendTrackingData(float tx, float ty, float tz, float rx, float ry, float rz, float rw);
+	FString SendTrackingData(const FTypeDispacth& CallBackPlatform, float tx, float ty, float tz, float rx, float ry, float rz, float rw);
 
 	
 };

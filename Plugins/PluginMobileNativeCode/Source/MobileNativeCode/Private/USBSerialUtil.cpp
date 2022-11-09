@@ -18,6 +18,15 @@ void AUSBSerialUtil::StaticFunctDispatch(const FString& ReturnValue)
 		//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("StaticFunctDispatch"));
 	});
 }
+void AUSBSerialUtil::StaticFunctDispatch_SendArray(const FString& ReturnValue)
+{
+	AsyncTask(ENamedThreads::GameThread, [=]()
+	{
+		StaticValueDispatch_SendArray.ExecuteIfBound(ReturnValue);
+		//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, ReturnValue);
+		//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("StaticFunctDispatch"));
+	});
+}
 
 // Called when the game starts or when spawned
 void AUSBSerialUtil::BeginPlay()
@@ -115,9 +124,12 @@ bool AUSBSerialUtil::SendByte(int a)
 	return success;
 	
 }
+FTypeDispacth AUSBSerialUtil::StaticValueDispatch_SendArray;
 
-FString AUSBSerialUtil::SendTrackingData(float tx, float ty, float tz, float rx, float ry, float rz, float rw)
+FString AUSBSerialUtil::SendTrackingData(const FTypeDispacth& CallBackPlatform, float tx, float ty, float tz, float rx, float ry, float rz, float rw)
 {
+	StaticValueDispatch_SendArray = CallBackPlatform;
+	
 	bool success = false;
 	FString Result = TEXT("Failed"); 
 #if PLATFORM_ANDROID
@@ -144,6 +156,11 @@ JNI_METHOD void Java_com_Plugins_MobileNativeCode_AndroidOpenAccessBridge_CallBa
 	FString result = JavaConvert::FromJavaFString(returnStr);
 	// UMobileNativeCodeBlueprint::StaticFunctDispatch(result);// Call Dispatcher
 	AUSBSerialUtil::StaticFunctDispatch(result);
+}
+JNI_METHOD void Java_com_Plugins_MobileNativeCode_AndroidOpenAccessBridge_CallBackCppSendData(JNIEnv* env, jclass clazz, jstring returnStr)
+{
+	FString result = JavaConvert::FromJavaFString(returnStr);
+	AUSBSerialUtil::StaticFunctDispatch_SendArray(result);
 }
 #endif //PLATFORM_ANDROID
 

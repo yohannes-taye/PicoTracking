@@ -34,6 +34,9 @@ public class AndroidOpenAccessBridge {
     public static native void CallBackCppAndroid(String returnStr);
     
     
+    @Keep
+    public static native void CallBackCppSendData(String returnStr);
+    
     AndroidOpenAccessBridge(){
         this.context = null; 
     }
@@ -218,17 +221,25 @@ public class AndroidOpenAccessBridge {
         return buffer;
     }
     @Keep 
-    public String sendTrackingData(float tx, float ty, float tz, float rx, float ry, float rz, float rw){
-        try{
-            byte[] buffer = prepareArray( tx, ty, tz, rx, ry, rz, rw);
-            mOutputStream.write(buffer);
-        }catch (IOException e){
-            return e.getMessage(); 
+    public String sendTrackingData(final float tx, final  float ty, final  float tz, final  float rx, final  float ry, final  float rz, final  float rw){
+        //Create a new thread 
+        Thread thread = new Thread(new Runnable(){
+            @Override
+            public void run() {
+                try{
+                    byte[] buffer = prepareArray( tx, ty, tz, rx, ry, rz, rw);
+                    mOutputStream.write(buffer);
+                }catch (IOException e){
+                    CallBackCppSendData(e.getMessage());
                 // return "ERROR: While attempting to write to stream"; 
-        }
-        return "Success";
-//         return true;  
-}
+                }
+                CallBackCppSendData("Success");
+            }
+        });
+        thread.start();
+        return "";
+        //         return true;  
+    }
     
     @Keep
     public boolean sendByte(int a){
