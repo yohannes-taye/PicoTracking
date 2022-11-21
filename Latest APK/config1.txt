@@ -1,0 +1,7 @@
+AutoDelete 0
+ForceTOC 0
+ForceNOUI 1
+ForceReset6Dof 1
+height 1.65
+ForceClose 0
+ForceStart 0

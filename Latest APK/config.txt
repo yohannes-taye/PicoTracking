@@ -2,4 +2,11 @@ open_guide:1
 ------
 home_pkg:com.YourCompany.UIInteractionDemo
 ------
-
+AutoDelete 1
+ForceTOC 0
+ForceNOUI 1
+ForceReset6Dof 1
+height 1.65
+ForceClose 0
+ForceStart 0
+circle_r 1.5
